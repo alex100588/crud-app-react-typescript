@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 interface User {
   id: number;
   name: string;
-  username:string
-  email: string
+  // username:string
+  // email: string
 }
 
 function App() {
@@ -49,10 +49,25 @@ function App() {
       })
   }
 
+  const addUser = ()=>{
+    const originalUsers = [...users]
+    const newUser = { id: 0, name: 'Alex'}
+    setUsers([newUser, ...users])
+
+    axios.post('https://jsonplaceholder.typicode.com/users', newUser)
+      .then(res => setUsers([res.data, ...users]))
+      .catch(err => {
+        setError(err.message)
+        setUsers(originalUsers)
+      })
+  }
+
   return (
     <>
+    <h1 className="text-center pt-3">Users CRUD app</h1>
       {error && <p className="text-danger">{error}</p>}
       {loading && <div className="spinner-border">{loading}</div>}
+      <button className="btn btn-primary mb-3 ms-5" onClick={()=>addUser()}>Add</button>
       <ul className="list-group p-5">
         {users.map((user) => (
           <li key={user.id} className="list-group-item d-flex justify-content-between">
